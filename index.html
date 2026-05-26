@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complexiteitsdiagram - gekoppeld aan overdrachtsformat</title>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--line:#dbe3ee;--text:#334155;--muted:#64748b;--soft:#f1f5f9;--green:#16a34a;--amber:#d97706;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.wrap{max-width:1280px;margin:0 auto;padding:24px;display:grid;gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.hero{overflow:hidden;padding:0}
+.heroTop{background:linear-gradient(135deg,#f1f5f9,#eff6ff,#f8fafc);padding:28px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#64748b}
+h1,h2,h3,p{margin:0} h1{font-size:40px;line-height:1.05;margin-top:10px} h2{font-size:22px} h3{font-size:16px}
+.muted{color:var(--muted);line-height:1.5}
+.heroFlex{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.badge{border:1px solid var(--line);border-radius:18px;padding:12px 18px;font-weight:800;font-size:14px;background:#fff}
+.scores{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px}
+.score{background:#f8fafc;border:1px solid var(--line);border-radius:18px;padding:14px}
+.score small{display:block;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;font-size:11px}
+.score b{font-size:26px}.score span{float:right;background:#fff;border-radius:999px;padding:5px 8px;font-size:12px;color:#64748b;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:20px;align-items:start}
+.left,.right{display:grid;gap:20px}
+.sectionHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap}
+.pill{display:inline-block;border:1px solid;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;margin-left:6px}
+.diagramBox{background:#f8fafc;border:1px solid var(--line);border-radius:24px;padding:12px;box-shadow:inset 0 1px 4px rgba(0,0,0,.03)}
+svg{width:100%;height:auto;display:block}
+.formcard{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 1px 5px rgba(15,23,42,.05)}
+.formhead{display:flex;gap:12px;margin-bottom:16px}.num{width:36px;height:36px;border-radius:16px;background:#475569;color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+label{display:block;margin-top:14px} label:first-child{margin-top:0}
+label>span{font-size:14px;font-weight:800;color:#334155} label small{display:block;font-size:12px;color:#64748b;margin-top:3px}
+select,input[type=text]{width:100%;margin-top:6px;border:1px solid #cbd5e1;border-radius:12px;padding:10px 12px;background:#fff;color:#334155;font-size:14px}
+input[type=range]{width:100%;accent-color:#475569;margin-top:10px}
+.sliderRow{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.val{background:#f1f5f9;border-radius:10px;padding:5px 8px;font-weight:800;font-size:13px;color:#475569}
+.param{border:1px solid var(--line);background:#f8fafc;border-radius:18px;padding:16px;margin-top:16px}.paramTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
+.advice{border:1px solid;border-radius:24px;padding:20px;box-shadow:0 1px 5px rgba(15,23,42,.05)}
+.advice.green{background:#ecfdf5;border-color:#a7f3d0;color:#064e3b;outline:4px solid #d1fae5}.advice.amber{background:#fffbeb;border-color:#fcd34d;color:#78350f;outline:4px solid #fef3c7}.advice.red{background:#fef2f2;border-color:#fecaca;color:#7f1d1d;outline:4px solid #fee2e2}
+.panel{background:rgba(255,255,255,.72);border-radius:18px;padding:16px;margin-top:16px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+ul{padding:0;margin:10px 0 0;list-style:none}li{display:flex;gap:9px;margin-top:8px;line-height:1.45;font-size:14px}li:before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.65;flex:0 0 auto;margin-top:6px}
+.phaseGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.phase{background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.9);border-radius:14px;padding:12px;font-size:14px;line-height:1.4}.phase b{display:block;margin-bottom:4px;font-size:16px}
+.formatGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}.info{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:14px}.info p{font-size:14px;color:#64748b;line-height:1.45;margin-top:5px}
+.toggle{display:flex;gap:8px;align-items:center;margin-top:16px;font-weight:700;font-size:14px}
+@media(max-width:980px){.layout,.scores,.phaseGrid,.formatGrid{grid-template-columns:1fr}.wrap{padding:14px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="card hero">
+<div class="heroTop"><div class="heroFlex"><div><div class="eyebrow">Overdracht calculatie naar werkvoorbereiding</div><h1>Complexiteitsdiagram</h1><p class="muted" style="margin-top:12px;max-width:850px">Praktisch gespreksinstrument voor het bepalen van de benodigde overdrachtsdiepgang. De overdracht wordt beoordeeld als overgangsfase: vóór, tijdens en na het overdrachtsmoment.</p></div><div id="topBadge" class="badge">Advies: Normaal</div></div></div>
+<div class="scores">
+<div class="score"><small>Complexiteit</small><b id="scoreComplexiteit"></b><span id="labelComplexiteit"></span></div>
+<div class="score"><small>Grootte</small><b id="scoreGrootte"></b><span id="labelGrootte"></span></div>
+<div class="score"><small>Standaardafstand</small><b id="scoreAfstand"></b><span id="labelAfstand"></span></div>
+<div class="score"><small>Indicatie</small><b id="scoreIndicatie"></b><span>ondersteunend</span></div>
+</div>
+</header>
+<div class="layout">
+<div class="left">
+<section class="card">
+<div class="sectionHead"><div><h2>Projectpositie</h2><p class="muted" style="font-size:14px">De stip wordt geplaatst op basis van de berekende complexiteit en grootte.</p></div><div><span class="pill" style="background:#ecfdf5;border-color:#a7f3d0;color:#166534">Standaardgebied</span><span class="pill" style="background:#fff7ed;border-color:#fed7aa;color:#c2410c">Projectpositie</span></div></div>
+<div class="diagramBox">
+<svg viewBox="0 0 620 620">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="currentColor"/></marker>
+<linearGradient id="riskGradient" x1="0" x2="1" y1="1" y2="0"><stop offset="0%" stop-color="#dcfce7"/><stop offset="48%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#fee2e2"/></linearGradient>
+<filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-opacity="0.14"/></filter>
+</defs>
+<rect x="0" y="0" width="620" height="620" rx="24" fill="#f8fafc"/><rect x="64" y="64" width="500" height="500" rx="18" fill="url(#riskGradient)" opacity=".72"/>
+<g opacity=".35" stroke="#64748b" stroke-dasharray="5 7"><line x1="164" x2="164" y1="64" y2="564"/><line x1="264" x2="264" y1="64" y2="564"/><line x1="364" x2="364" y1="64" y2="564"/><line x1="464" x2="464" y1="64" y2="564"/><line x1="64" x2="564" y1="464" y2="464"/><line x1="64" x2="564" y1="364" y2="364"/><line x1="64" x2="564" y1="264" y2="264"/><line x1="64" x2="564" y1="164" y2="164"/></g>
+<line x1="64" y1="564" x2="584" y2="564" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/><line x1="64" y1="564" x2="64" y2="44" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="315" y="608" text-anchor="middle" font-size="17" font-weight="800" fill="#334155">Complexiteit</text><text x="315" y="588" text-anchor="middle" font-size="12" fill="#475569">technisch · onzekerheid · afwijking · expertise</text>
+<text transform="translate(20 315) rotate(-90)" text-anchor="middle" font-size="17" font-weight="800" fill="#334155">Grootte</text><text transform="translate(42 315) rotate(-90)" text-anchor="middle" font-size="12" fill="#475569">tijd · geld · vierkante meters</text>
+<ellipse id="stdEllipse" cx="254" cy="374" rx="120" ry="96" fill="#fff" stroke="#16a34a" stroke-width="4" opacity=".94" filter="url(#softShadow)"/><text id="stdText1" x="254" y="371" text-anchor="middle" font-size="20" font-weight="900" fill="#166534">Standaardgebied</text><text id="stdText2" x="254" y="394" text-anchor="middle" font-size="11" fill="#166534">bedrijf-/teamspecifieke routine</text>
+<line id="vLine" x1="304" y1="564" x2="304" y2="354" stroke="#334155" stroke-width="1.5" stroke-dasharray="5 6" opacity=".65"/><line id="hLine" x1="64" y1="354" x2="304" y2="354" stroke="#334155" stroke-width="1.5" stroke-dasharray="5 6" opacity=".65"/>
+<circle id="dot" cx="304" cy="354" r="16" fill="#d97706" stroke="#fff" stroke-width="5" filter="url(#softShadow)"/><text id="dotLabel" x="325" y="336" font-size="13" font-weight="900" fill="#334155">Voorbeeldproject</text>
+</svg>
+</div>
+</section>
+<section id="advice" class="advice amber"><div class="sectionHead"><div><div class="eyebrow" style="color:inherit;opacity:.75">Advies voor de overdracht</div><h2 id="adviesTitel"></h2><p id="adviesSub" style="font-size:14px;opacity:.82;margin-top:4px"></p></div><div class="badge" id="adviesScore"></div></div>
+<div class="panel"><h3>Toepassen</h3><ul id="checklistList"></ul></div>
+<div class="panel"><h3>Overdracht als overgangsfase</h3><div class="phaseGrid" id="phaseGrid"></div></div>
+<div class="panel"><h3>Aandachtspunten voor dit bedrijf/team</h3><ul id="bedrijfFocus"></ul></div>
+<label class="toggle"><input type="checkbox" id="toonOnderbouwing" checked> Toon waarom dit advies wordt gegeven</label>
+<div class="panel" id="onderbouwingPanel"><h3>Onderbouwing</h3><ul id="onderbouwing"></ul></div>
+</section>
+<section class="card"><div class="eyebrow">Compact overdrachtsformat</div><h2 style="margin-top:6px">Wat moet bespreekbaar zijn?</h2><p class="muted" style="margin-top:8px;font-size:14px">Het format herhaalt niet alle projectinformatie. Het maakt vooral zichtbaar wat vaak impliciet blijft en later tot vragen leidt.</p><div class="formatGrid" id="formatGrid"></div></section>
+</div>
+<aside class="right">
+<section class="formcard"><div class="formhead"><span class="num">1</span><div><h2>Bedrijf / team bepalen</h2><p class="muted" style="font-size:14px">Begin met de normale werkwijze van het bedrijf of team.</p></div></div><div id="bedrijfInputs"></div></section>
+<section class="formcard"><div class="formhead"><span class="num">2</span><div><h2>Standaardgebied instellen</h2><p class="muted" style="font-size:14px">Plaats wat voor dit bedrijf of team als normale routine wordt gezien.</p></div></div><div id="standaardInputs"></div></section>
+<section class="formcard"><div class="formhead"><span class="num">3</span><div><h2>Project invoeren</h2><p class="muted" style="font-size:14px">De projectpositie wordt automatisch berekend.</p></div></div><label><span>Projectnaam</span><input type="text" id="projectNaam" value="Voorbeeldproject"></label><div class="param"><div class="paramTop"><div><h3>Complexiteit project</h3><p class="muted" style="font-size:12px">Gemiddelde van vier parameters</p></div><span class="val" id="complexiteitVal"></span></div><div id="complexInputs"></div></div><div class="param"><div class="paramTop"><div><h3>Grootte project</h3><p class="muted" style="font-size:12px">Gemiddelde van drie parameters</p></div><span class="val" id="grootteVal"></span></div><div id="grootteInputs"></div></div></section>
+<section class="formcard"><div class="formhead"><span class="num">4</span><div><h2>Projectfactoren</h2><p class="muted" style="font-size:14px">Factoren kunnen het advies verzwaren.</p></div></div><div id="projectFactorInputs"></div></section>
+</aside>
+</div></div>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+const $=id=>document.getElementById(id);
+const opties={procesinrichting:["Sterker procesmatig ingericht","Tussenvorm","Informeel / korte lijnen"],standaardisatie:["Sterk gestandaardiseerd","Gedeeltelijk gestandaardiseerd","Weinig gestandaardiseerd"],projectafhankelijkheid:["Vaste overdrachtswerkwijze","Deels projectafhankelijk","Sterk projectafhankelijk"],functiescheiding:["Korte lijnen / gecombineerde functies","Normale functiescheiding","Sterke functiescheiding"],contractvorm:["Standaard / bekend","Regulier aangenomen werk","Bouwteam / CPO / afwijkend"],maatwerk:["Weinig afwijkingen","Beperkte afwijkingen","Veel maatwerk of afwijkingen"],partijen:["Beperkt aantal partijen","Meerdere disciplines","Veel betrokken partijen"],opdrachtgever:["Bekende opdrachtgever","Zakelijke opdrachtgever","Particulier / CPO / veel klantkeuzes"],risico:["Laag risicoprofiel","Normaal risicoprofiel","Hoog risicoprofiel"],vroegeBetrokkenheid:["Vroeg betrokken","Normaal betrokken","Laat betrokken"]};
+const scoreWaarde={"Sterker procesmatig ingericht":1,"Tussenvorm":1,"Informeel / korte lijnen":1,"Sterk gestandaardiseerd":0,"Gedeeltelijk gestandaardiseerd":1,"Weinig gestandaardiseerd":2,"Vaste overdrachtswerkwijze":0,"Deels projectafhankelijk":1,"Sterk projectafhankelijk":1,"Korte lijnen / gecombineerde functies":0,"Normale functiescheiding":1,"Sterke functiescheiding":2,"Standaard / bekend":0,"Regulier aangenomen werk":1,"Bouwteam / CPO / afwijkend":2,"Weinig afwijkingen":0,"Beperkte afwijkingen":1,"Veel maatwerk of afwijkingen":2,"Beperkt aantal partijen":0,"Meerdere disciplines":1,"Veel betrokken partijen":2,"Bekende opdrachtgever":0,"Zakelijke opdrachtgever":1,"Particulier / CPO / veel klantkeuzes":2,"Laag risicoprofiel":0,"Normaal risicoprofiel":1,"Hoog risicoprofiel":2,"Vroeg betrokken":0,"Normaal betrokken":1,"Laat betrokken":2};
+const niveaus={Licht:{titel:"Lichte overdracht",label:"Licht",sub:"Standaardproject of project binnen de normale routine van het team",cls:"green",punt:"#16a34a"},Normaal:{titel:"Normale overdracht",label:"Normaal",sub:"Regulier project met meerdere disciplines, normale risico’s of beperkte afwijkingen",cls:"amber",punt:"#d97706"},Uitgebreid:{titel:"Uitgebreide overdracht",label:"Uitgebreid",sub:"Complex, afwijkend of risicovol project met extra overdrachtsdiepgang",cls:"red",punt:"#dc2626"}};
+const checklistItems={Licht:["Vul het overdrachtsformat beperkt in: projectbasis, leidende stukken en openstaande acties zijn altijd nodig.","Aannames, risico’s, bezuinigingen, leverancierskeuzes, klantafspraken en afwijkingen worden alleen kort benoemd wanneer ze aanwezig zijn of afwijken van de standaard.","Gebruik bij standaardonderdelen kort ‘n.v.t.’ of ‘standaard’, zodat duidelijk is dat het punt bewust is beoordeeld.","Terugkoppeling wordt alleen gepland wanneer informatie ontbreekt, onduidelijk is of later nog moet worden aangevuld."],Normaal:["Vul het compacte overdrachtsformat volledig in, maar houd de toelichting per onderdeel kort en praktisch.","Besteed expliciet aandacht aan aannames en uitgangspunten, risico’s en kansen, bezuinigingen, leverancierskeuzes en openstaande acties.","Klantafspraken en afwijkingen van standaard worden ingevuld wanneer deze invloed hebben op inkoop, planning, technische uitwerking of uitvoering.","Openstaande acties worden altijd vastgelegd met actiehouder, termijn en benodigde terugkoppeling."],Uitgebreid:["Vul het volledige overdrachtsformat uitgebreid in, omdat het project buiten de normale routine valt of zwaarwegende projectfactoren heeft.","Werk aannames, risico’s, bezuinigingen, leverancierskeuzes, klantafspraken en afwijkingen van standaard inhoudelijk uit, inclusief de reden achter gemaakte keuzes.","Voeg projectspecifieke aandachtspunten toe wanneer het standaardformat onvoldoende is voor het project.","Maak een duidelijke actielijst met actiehouder, termijn, prioriteit en terugkoppelmoment.","Plan na de eerste uitwerking door werkvoorbereiding een terugkoppelmoment om ontbrekende of onduidelijke informatie te bespreken."]};
+const fases={Licht:[["Vóór","Controleer of de leidende stukken beschikbaar zijn."],["Tijdens","Bespreek uitgangspunten, aandachtspunten en open acties kort."],["Na","Koppel alleen terug wanneer informatie ontbreekt of onduidelijk is."]],Normaal:[["Vóór","Vul het compacte overdrachtsformat in op aannames, risico’s, leverancierskeuzes en acties."],["Tijdens","Bespreek niet alleen wat is opgenomen, maar ook waarom keuzes zijn gemaakt."],["Na","Controleer kort of openstaande acties zijn opgepakt en of informatie bruikbaar was."]],Uitgebreid:[["Vóór","Betrek werkvoorbereiding zo vroeg mogelijk en verzamel de achterliggende keuzes uit de calculatie."],["Tijdens","Behandel de overdracht als inhoudelijk risicomoment: aannames, risico’s, bezuinigingen, klantafspraken en afwijkingen."],["Na","Plan een terugkoppelmoment na de eerste uitwerking: wat ontbrak, wat was onduidelijk en wat moet beter?"]]};
+const format=[["Projectbasis","Projectnaam, opdrachtgever, contractvorm, betrokken functies en datum overdracht."],["Leidende stukken","Begroting, tekeningen, contractstukken, offertes, versies en bijzonderheden."],["Aannames en uitgangspunten","Belangrijkste aannames, hoeveelheden, stelposten en uitgangspunten."],["Risico’s en kansen","Technische, financiële, organisatorische en planningsrisico’s en kansen."],["Bezuinigingen / optimalisaties","Keuzes die zijn aangepast, inclusief reden en praktische gevolgen."],["Leverancierskeuzes","Uitgangspunten voor leveranciers en onderaannemers, inclusief reden van keuze."],["Klantafspraken","Specifieke wensen, verwachtingen, gevoeligheden en mondelinge afspraken."],["Afwijkingen van standaard","Details, werkwijzen of afspraken die afwijken van de gebruikelijke aanpak."],["Openstaande acties","Actie, actiehouder, termijn en benodigde terugkoppeling."],["Terugkoppeling","Moment waarop werkvoorbereiding terugkoppelt welke informatie ontbrak of onduidelijk was."]];
+function select(id,label,opts,sel=1){return `<label><span>${label}</span><select id="${id}">${opts.map((o,i)=>`<option ${i===sel?'selected':''}>${o}</option>`).join("")}</select></label>`}
+function slider(id,label,sub,val,min=0,max=100){return `<label><div class="sliderRow"><div><span>${label}</span><small>${sub}</small></div><span class="val" id="${id}Val">${val}</span></div><input type="range" id="${id}" min="${min}" max="${max}" value="${val}"></label>`}
+function list(id,items){$(id).innerHTML=items.map(i=>`<li>${i}</li>`).join("")}
+function avg(ids){return Math.round(ids.map(id=>+$(id).value).reduce((a,b)=>a+b,0)/ids.length)}
+function scoreLabel(v){return v<34?"laag":v<67?"gemiddeld":"hoog"}
+function focus(){const p=$("procesinrichting").value,s=$("standaardisatie").value,pa=$("projectafhankelijkheid").value,f=$("functiescheiding").value,a=[];if(p==="Sterker procesmatig ingericht")a.push("Documenten zijn aanwezig, maar borg ook de gedachte achter keuzes, aannames en risico’s.");if(p==="Informeel / korte lijnen")a.push("Leg cruciale informatie kort vast, zodat projectkennis niet persoonsafhankelijk blijft.");if(s==="Sterk gestandaardiseerd")a.push("Benoem afwijkingen van de standaard expliciet; juist daar ontstaan interpretatieverschillen.");if(s==="Weinig gestandaardiseerd")a.push("Besteed extra aandacht aan projectspecifieke keuzes, omdat minder vaste standaardinformatie beschikbaar is.");if(pa!=="Vaste overdrachtswerkwijze")a.push("Bepaal een minimale ondergrens voor wat altijd wordt vastgelegd, ook bij een projectafhankelijke overdracht.");if(f==="Sterke functiescheiding")a.push("Maak openstaande acties concreet, omdat informatie sneller tussen functies kan blijven hangen.");if(!a.length)a.push("Houd de overdracht compact, maar zorg dat uitgangspunten, aandachtspunten en openstaande acties altijd duidelijk zijn.");return a}
+$("bedrijfInputs").innerHTML=select("procesinrichting","Procesinrichting",opties.procesinrichting,1)+select("standaardisatie","Mate van standaardisatie",opties.standaardisatie,1)+select("projectafhankelijkheid","Mate van projectafhankelijkheid",opties.projectafhankelijkheid,1)+select("functiescheiding","Functiescheiding",opties.functiescheiding,1);
+$("standaardInputs").innerHTML=slider("standaardComplexiteit","Standaardgebied - complexiteit","bij welke complexiteit ligt de routine?",38)+slider("standaardGrootte","Standaardgebied - grootte","bij welke projectgrootte ligt de routine?",38)+slider("standaardMarge","Omvang standaardgebied","hoe breed is de routine van dit bedrijf/team?",24,12,36);
+$("complexInputs").innerHTML=slider("technischeComplexiteit","Technische complexiteit","ontwerp, details, installaties of uitvoering",48)+slider("informatieOnzekerheid","Informatie-onzekerheid","aannames, ontbrekende gegevens of onduidelijke uitgangspunten",48)+slider("afwijkingStandaard","Afwijking van standaard","afwijking van normale werkwijze of bekende projecttypen",48)+slider("benodigdeExpertise","Benodigde expertise","specifieke kennis, ervaring of vakmanschap",48);
+$("grootteInputs").innerHTML=slider("tijd","Tijd","tijdsduur en planningsimpact",42)+slider("geld","Geld","financiële omvang",42)+slider("vierkanteMeters","Vierkante meters","ruimtelijke/projectomvang",42);
+$("projectFactorInputs").innerHTML=select("contractvorm","Contractvorm",opties.contractvorm,1)+select("maatwerk","Maatwerk / afwijkingen",opties.maatwerk,1)+select("partijen","Betrokken partijen",opties.partijen,1)+select("opdrachtgever","Opdrachtgeverstype",opties.opdrachtgever,1)+select("risico","Risicoprofiel",opties.risico,1)+select("vroegeBetrokkenheid","Betrokkenheid werkvoorbereiding",opties.vroegeBetrokkenheid,1);
+$("formatGrid").innerHTML=format.map(([t,x])=>`<div class="info"><h3>${t}</h3><p>${x}</p></div>`).join("");
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",update));
+$("toonOnderbouwing").addEventListener("change",()=>{$("onderbouwingPanel").style.display=$("toonOnderbouwing").checked?"block":"none"});
+function update(){
+["technischeComplexiteit","informatieOnzekerheid","afwijkingStandaard","benodigdeExpertise","tijd","geld","vierkanteMeters","standaardComplexiteit","standaardGrootte","standaardMarge"].forEach(id=>$(id+"Val").textContent=$(id).value);
+const complexiteit=avg(["technischeComplexiteit","informatieOnzekerheid","afwijkingStandaard","benodigdeExpertise"]),grootte=avg(["tijd","geld","vierkanteMeters"]);$("complexiteitVal").textContent=complexiteit;$("grootteVal").textContent=grootte;
+const sc=+$("standaardComplexiteit").value,sg=+$("standaardGrootte").value,sm=+$("standaardMarge").value,nx=(complexiteit-sc)/sm,ny=(grootte-sg)/(sm*.8),dist=Math.sqrt(nx*nx+ny*ny),binnen=dist<=1,verBuiten=dist>1.45;
+const heavy=[];if($("contractvorm").value.includes("CPO"))heavy.push("afwijkende contractvorm of CPO");if($("maatwerk").value.includes("Veel"))heavy.push("veel maatwerk of afwijkingen van standaard");if($("partijen").value.includes("Veel"))heavy.push("veel betrokken partijen");if($("opdrachtgever").value.includes("Particulier"))heavy.push("particuliere opdrachtgever/CPO/veel klantkeuzes");if($("risico").value.includes("Hoog"))heavy.push("hoog risicoprofiel");if($("vroegeBetrokkenheid").value.includes("Laat")&&+$("informatieOnzekerheid").value>=65)heavy.push("late betrokkenheid van werkvoorbereiding in combinatie met hoge informatie-onzekerheid");
+const aandacht=[];if($("contractvorm").value.includes("Regulier"))aandacht.push("regulier aangenomen werk");if($("maatwerk").value.includes("Beperkte"))aandacht.push("beperkte afwijkingen");if($("partijen").value.includes("Meerdere"))aandacht.push("meerdere disciplines");if($("opdrachtgever").value.includes("Zakelijke"))aandacht.push("zakelijke opdrachtgever");if($("risico").value.includes("Normaal"))aandacht.push("normaal risicoprofiel");if($("functiescheiding").value.includes("Sterke"))aandacht.push("sterke functiescheiding");if($("vroegeBetrokkenheid").value.includes("Laat"))aandacht.push("late betrokkenheid werkvoorbereiding");
+const factorScore=[$("procesinrichting").value,$("standaardisatie").value,$("projectafhankelijkheid").value,$("functiescheiding").value,$("vroegeBetrokkenheid").value,$("contractvorm").value,$("maatwerk").value,$("partijen").value,$("opdrachtgever").value,$("risico").value].map(v=>scoreWaarde[v]||0).reduce((a,b)=>a+b,0);
+const indicatie=Math.round(complexiteit*.35+grootte*.2+factorScore*5+dist*12);let niveau="Licht";if(!binnen||aandacht.length>=3)niveau="Normaal";if(heavy.length||verBuiten||(!binnen&&(complexiteit>=75||grootte>=80)))niveau="Uitgebreid";const meta=niveaus[niveau];
+$("scoreComplexiteit").textContent=complexiteit;$("labelComplexiteit").textContent=scoreLabel(complexiteit);$("scoreGrootte").textContent=grootte;$("labelGrootte").textContent=scoreLabel(grootte);$("scoreAfstand").textContent=dist.toFixed(2);$("labelAfstand").textContent=binnen?"binnen gebied":"buiten gebied";$("scoreIndicatie").textContent=indicatie;
+$("topBadge").textContent="Advies: "+meta.label;$("topBadge").style.color=meta.punt;$("topBadge").style.borderColor=meta.punt+"55";$("advice").className="advice "+meta.cls;$("adviesTitel").textContent=meta.titel;$("adviesSub").textContent=meta.sub;$("adviesScore").textContent="indicatie "+indicatie;$("dot").setAttribute("fill",meta.punt);
+const scx=64+sc*5,scy=564-sg*5,rx=sm*5,ry=sm*.8*5;$("stdEllipse").setAttribute("cx",scx);$("stdEllipse").setAttribute("cy",scy);$("stdEllipse").setAttribute("rx",rx);$("stdEllipse").setAttribute("ry",ry);$("stdText1").setAttribute("x",scx);$("stdText1").setAttribute("y",scy-3);$("stdText2").setAttribute("x",scx);$("stdText2").setAttribute("y",scy+20);
+const x=64+complexiteit*5,y=564-grootte*5;$("dot").setAttribute("cx",x);$("dot").setAttribute("cy",y);$("vLine").setAttribute("x1",x);$("vLine").setAttribute("x2",x);$("vLine").setAttribute("y2",y);$("hLine").setAttribute("y1",y);$("hLine").setAttribute("y2",y);$("hLine").setAttribute("x2",x);$("dotLabel").textContent=$("projectNaam").value||"Project";$("dotLabel").setAttribute("x",Math.min(x+21,510));$("dotLabel").setAttribute("y",Math.max(y-18,82));
+list("checklistList",checklistItems[niveau]);$("phaseGrid").innerHTML=fases[niveau].map(([f,t])=>`<div class="phase"><b>${f}</b>${t}</div>`).join("");list("bedrijfFocus",focus());
+const triggers=[`complexiteit ${complexiteit}: technische complexiteit (${$("technischeComplexiteit").value}), informatie-onzekerheid (${$("informatieOnzekerheid").value}), afwijking van standaard (${$("afwijkingStandaard").value}) en benodigde expertise (${$("benodigdeExpertise").value})`,`grootte ${grootte}: tijd (${$("tijd").value}), geld (${$("geld").value}) en vierkante meters (${$("vierkanteMeters").value})`];
+if(binnen&&!heavy.length&&niveau==="Licht"){triggers.push("project valt binnen het standaardgebied van dit bedrijf/team");triggers.push("er zijn geen zwaarwegende afwijkende projectfactoren aanwezig")}if(binnen&&!heavy.length&&niveau==="Normaal")triggers.push("project valt binnen het standaardgebied, maar enkele aandachtfactoren vragen om een normale overdracht");if(binnen&&heavy.length)triggers.push("project ligt op basis van grootte en complexiteit binnen het ingestelde standaardgebied, maar wordt door zwaarwegende projectfactoren alsnog opgeschaald");if(!binnen)triggers.push("project valt op basis van grootte en complexiteit buiten het standaardgebied van dit bedrijf/team");if(verBuiten)triggers.push("project ligt ruim buiten het standaardgebied");heavy.forEach(f=>triggers.push(f+" vraagt extra overdrachtsdiepgang"));aandacht.forEach(f=>triggers.push(f+" vraagt aandacht in de overdracht"));if($("vroegeBetrokkenheid").value.includes("Vroeg"))triggers.push("werkvoorbereiding is vroeg betrokken, waardoor projectkennis al vóór het formele overdrachtsmoment kan ontstaan");
+list("onderbouwing",triggers);
+}
+update();
+});
+</script>
+</body></html>
